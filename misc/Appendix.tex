@@ -1,0 +1,44 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendixpage
+\appendix
+\chapter{Recursive Least Square}\label{Appen1}
+The unknown parameters appear in a linear form, such as in the linear parametric model
+\begin{equation}
+    \mathbf{z} = {\theta^*}^\top \mathbf{u}
+\end{equation}
+where \(z\) is the output signal, \({\theta^*}^\top\) denotes the unknown parameter to be estimated, and \(\mathbf{u}\) represents the input signals. The estimate of $\mathbf{z}$ is expressed as
+\begin{equation}
+\hat{\mathbf{z}} = \theta\mathbf{u},
+\end{equation}
+where \(\hat{\mathbf{z}}\) and \(\theta\) denote the estimate of \(\mathbf{z}\) and the estimated parameter of \(\theta^*\), respectively and the parameter estimation error is defined as
+\begin{equation}
+\boldsymbol{\epsilon} =\mathbf{z} - \hat{\mathbf{z}} = \mathbf{z} - \theta^\top \boldsymbol{u}.
+\end{equation}
+To estimate the parameter $\theta^*$, the integral cost function \cite{c3.2_4} is considered as follows:
+\begin{equation}
+J(\theta) = \frac{1}{2} \int_{0}^{t} e^{-\beta(t-\tau)} \left[ \mathbf{z}(\tau) - \theta(t) \boldsymbol{u}(\tau) \right]^2 d\tau + \frac{1}{2} e^{-\beta t} (\theta - \theta_0)^\top Q_0 (\theta - \theta_0),
+\end{equation}
+where \( Q_0 > 0 \), \( \beta > 0 \), and \( \theta_0 = \theta(0) \), which include discounting of past data and a penalty on the initial estimate \(\theta_0\) of \(\theta^*\). Since \( J(\theta) \) is a convex function of \(\theta\) at each time \( t \), the global minimum can be achieved when the gradient of the cost function is zero, which gives \(\theta(t)\) as follows:
+\begin{equation}
+\theta(t) = \Gamma(t) \left[ e^{-\beta t} Q_0 \theta_0 + \int_{0}^{t} e^{-\beta (t - \tau)} \mathbf{z}(\tau) \boldsymbol{u}(\tau) d\tau \right],
+\end{equation}
+where
+\begin{equation}
+\Gamma(t) = \left[ e^{-\beta t} Q_0 + \int_{0}^{t} e^{-\beta(t - \tau)} \mathbf{u}(\tau)^\top \mathbf{u}(\tau) d\tau \right]^{-1},
+\end{equation}
+with \( Q_0 > 0 \) and \( \mathbf{u}^\top \mathbf{u} \) being positive semidefinite, \( \Gamma(t) \) exists at each time \( t \). By Using the identity, the differential equation of $\Gamma(t)$ can be expressed as
+\begin{equation}
+\begin{aligned}
+\frac{d}{dt} \left( \Gamma \Gamma^{-1} \right) = \dot{\Gamma} \Gamma^{-1} + \Gamma \frac{d}{dt} \left( \Gamma^{-1} \right) = 0,\\
+    \dot{\Gamma} = \beta \Gamma - \Gamma \boldsymbol{u}^\top \boldsymbol{u} \Gamma, \quad \Gamma(0) = \Gamma_0 = Q_0^{-1},
+\end{aligned}
+\end{equation}
+Finally, differentiating the equation (\ref{eqn:3.23}) with respect to \( t \) and using (\ref{eqn:3.21}) and (\ref{eqn:3.25}), the continuous-time recursive least-squares parameter update algorithm with forgetting factor can be expressed as
+\begin{equation}
+\dot{\theta} = \Gamma \boldsymbol{\epsilon}^\top \boldsymbol{u}. 
+\end{equation}
+where \(\Gamma\) denotes the covariance matrix and \(\beta\) is called the forgetting factor. Therefore, if the input signal \(\mathbf{u}\) satisfies the PE (Persistent Excitation) condition and \(\theta\) and \(\dot{\theta}\) are uniformly bounded, then \(\theta(t)\) will eventually converge exponentially to the actual parameter \(\theta^*\).
